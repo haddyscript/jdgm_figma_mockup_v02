@@ -1048,6 +1048,24 @@ body { font-family:'DM Sans',sans-serif; background:#E8E6E1; }
   display:flex; gap:8px; align-items:flex-start; line-height:1.6;
 }
 .gcash-divider { text-align:center; font-size:11px; color:var(--text-hint); margin:14px 0 4px; letter-spacing:1px; }
+.paypal-panel {
+  border:1.5px solid #E8E5E0; border-radius:var(--r-lg); padding:20px; background:#fff;
+}
+.paypal-header { display:flex; align-items:center; gap:12px; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #F0EFED; }
+.paypal-logo-badge {
+  width:44px; height:44px; border-radius:12px; background:#0070BA;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; font-weight:900; color:#fff; font-family:'DM Sans',sans-serif; flex-shrink:0;
+}
+.paypal-label { font-size:15px; font-weight:700; color:var(--text-dark); }
+.paypal-sublabel { font-size:12px; color:var(--text-muted); margin-top:2px; }
+.paypal-benefits { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+.paypal-benefit { display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--text-body); line-height:1.5; }
+.paypal-note {
+  background:#F0F8FF; border-radius:var(--r-md);
+  padding:10px 14px; font-size:12px; color:#003087;
+  display:flex; gap:8px; align-items:flex-start; line-height:1.6;
+}
 
 /* =============================================
    JDGM REAL-SITE COLOR SCHEME — Frame 02 & 04
@@ -1224,6 +1242,9 @@ body { font-family:'DM Sans',sans-serif; background:#E8E6E1; }
           <button class="pay-tab" id="pay-tab-gcash">
             <span style="width:22px;height:22px;border-radius:6px;background:#007DFF;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0;">G</span> GCash
           </button>
+          <button class="pay-tab" id="pay-tab-paypal">
+            <span style="width:22px;height:22px;border-radius:6px;background:#0070BA;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0;">P</span> PayPal
+          </button>
         </div>
 
         <!-- Card panel -->
@@ -1253,6 +1274,32 @@ body { font-family:'DM Sans',sans-serif; background:#E8E6E1; }
             <div class="gcash-step"><div class="gcash-step-num">3</div>Confirm the amount with your GCash MPIN to complete your gift</div>
           </div>
           <div class="gcash-note">📱 Your tax-deductible receipt will be sent to your GCash-registered email and your JDGM donor account.</div>
+        </div>
+
+        <!-- PayPal panel -->
+        <div id="pay-panel-paypal" style="display:none;" class="paypal-panel">
+          <div class="paypal-header">
+            <div class="paypal-logo-badge">P</div>
+            <div>
+              <div class="paypal-label">PayPal</div>
+              <div class="paypal-sublabel">Secure online payments worldwide · Fast and trusted</div>
+            </div>
+          </div>
+          <div class="paypal-benefits">
+            <div class="paypal-benefit">
+              <span style="font-size:16px;">🔒</span>
+              <span>Bank-level security with buyer protection</span>
+            </div>
+            <div class="paypal-benefit">
+              <span style="font-size:16px;">🌍</span>
+              <span>Available in 200+ countries and regions</span>
+            </div>
+            <div class="paypal-benefit">
+              <span style="font-size:16px;">⚡</span>
+              <span>Instant processing with email confirmation</span>
+            </div>
+          </div>
+          <div class="paypal-note">💳 You can pay with your PayPal balance, bank account, or credit card. Your tax-deductible receipt will be sent to your PayPal-registered email and your JDGM donor account.</div>
         </div>
 
         <button class="btn-green" style="margin-top:28px;font-size:16px;padding:18px 28px;">♡ Complete Gift — $29.99 / Month</button>
@@ -1530,19 +1577,23 @@ body { font-family:'DM Sans',sans-serif; background:#E8E6E1; }
   /* Payment method tabs */
   const payTabCard   = document.getElementById('pay-tab-card');
   const payTabGcash  = document.getElementById('pay-tab-gcash');
+  const payTabPaypal = document.getElementById('pay-tab-paypal');
   const panelCard    = document.getElementById('pay-panel-card');
   const panelGcash   = document.getElementById('pay-panel-gcash');
+  const panelPaypal  = document.getElementById('pay-panel-paypal');
 
   function switchPayMethod(method) {
-    const isCard = method === 'card';
-    payTabCard.classList.toggle('active', isCard);
-    payTabGcash.classList.toggle('active', !isCard);
-    panelCard.style.display  = isCard ? '' : 'none';
-    panelGcash.style.display = isCard ? 'none' : '';
+    payTabCard.classList.toggle('active', method === 'card');
+    payTabGcash.classList.toggle('active', method === 'gcash');
+    payTabPaypal.classList.toggle('active', method === 'paypal');
+    panelCard.style.display  = method === 'card' ? '' : 'none';
+    panelGcash.style.display = method === 'gcash' ? '' : 'none';
+    panelPaypal.style.display = method === 'paypal' ? '' : 'none';
   }
 
   payTabCard.addEventListener('click',  () => switchPayMethod('card'));
   payTabGcash.addEventListener('click', () => switchPayMethod('gcash'));
+  payTabPaypal.addEventListener('click', () => switchPayMethod('paypal'));
 
   /* Complete donation and show thank-you page */
   if (ctaBtn) {
@@ -1590,6 +1641,318 @@ body { font-family:'DM Sans',sans-serif; background:#E8E6E1; }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
+})();
+</script>
+
+<!-- ============================================================ -->
+<!-- FRAME 3: MAKE A DIFFERENCE — Ways To Give                     -->
+<!-- ============================================================ -->
+<div class="jdgm-real">
+  <div class="frame-label">Frame 03 — Make a Difference · Ways To Give (1440px)</div>
+  <div class="frame">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="nav-logo">
+        <img src="https://d14tal8bchn59o.cloudfront.net/wXWLUTzDpSGIT3USnLCfVD5bygtfOXZJDbYPeTlo2vo/w:1920/plain/https://02f0a56ef46d93f03c90-22ac5f107621879d5667e0d7ed595bdb.ssl.cf2.rackcdn.com/sites/104216/photos/22629528/C3F69010-FC63-4CCA-9453-99A93EFB8AE2_original.png" alt="Johnny Davis Global Missions" style="height:52px;width:auto;display:block;"/>
+      </div>
+      <div class="nav-links">
+        <a class="nav-link">Home</a>
+        <a class="nav-link">Who We Are</a>
+        <a class="nav-link">What We Do</a>
+        <a class="nav-link active" style="font-weight:600;">Make a Difference</a>
+        <a class="nav-link">Contact Us</a>
+        <a class="nav-cta">♡ Donate Now</a>
+      </div>
+    </nav>
+
+    <!-- Hero Banner -->
+    <div style="background:linear-gradient(rgba(18,8,2,0.72),rgba(18,8,2,0.72)),url('one_time_contribution.webp') center/cover no-repeat;padding:72px 64px 60px;">
+      <div style="max-width:1100px;margin:0 auto;">
+        <div style="display:inline-block;background:#C87516;color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:16px;">Make a Difference</div>
+        <h1 style="font-family:'Playfair Display',serif;font-size:46px;font-weight:800;color:#fff;margin-bottom:14px;line-height:1.18;">Together We Can<br>Change the World.</h1>
+        <p style="font-size:16px;color:rgba(255,255,255,0.72);max-width:520px;line-height:1.7;font-weight:300;">Every dollar you give reaches real people — feeding children, drilling wells, and rescuing lives in the Philippines and Uganda.</p>
+      </div>
+    </div>
+
+    <!-- Ways To Give Section -->
+    <section style="padding:72px 64px;background:var(--bg-page);">
+      <div style="max-width:1100px;margin:0 auto;">
+
+        <!-- Section heading -->
+        <div style="text-align:center;margin-bottom:56px;">
+          <h2 style="font-family:'Playfair Display',serif;font-size:36px;font-weight:800;color:var(--text-dark);margin-bottom:10px;">Ways To Give</h2>
+          <p style="font-size:16px;color:var(--text-muted);font-weight:300;">Choose the giving method that works best for you.</p>
+        </div>
+
+        <!-- 3-column giving cards -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-bottom:48px;">
+
+          <!-- Card 1: Scan or Click (QR / Digital) -->
+          <div style="background:#fff;border-radius:var(--r-xl);overflow:hidden;box-shadow:0 2px 24px rgba(0,0,0,0.08);display:flex;flex-direction:column;">
+            <div style="position:relative;overflow:hidden;">
+              <img src="scan_qr.webp" alt="Scan QR Code to Donate" style="width:100%;height:240px;object-fit:cover;display:block;"/>
+              <div style="position:absolute;top:14px;left:14px;background:#C87516;color:#fff;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:4px 12px;border-radius:100px;">Mobile Giving</div>
+            </div>
+            <div style="padding:28px 28px 32px;flex:1;display:flex;flex-direction:column;">
+              <h3 style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:10px;">Scan or Give Online</h3>
+              <p style="font-size:14px;color:var(--text-muted);line-height:1.65;margin-bottom:auto;padding-bottom:24px;font-weight:300;">
+                <strong style="color:var(--text-body);font-weight:600;">On a phone?</strong> Open your camera and point it at the QR code on a printed flyer to give instantly.<br><br>
+                <strong style="color:var(--text-body);font-weight:600;">On a computer?</strong> Click the button below — it opens the same secure donation page.
+              </p>
+              <a href="#" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#C87516;color:#fff;padding:14px 24px;border-radius:100px;font-size:15px;font-weight:700;text-decoration:none;text-align:center;">Open Donation Page →</a>
+            </div>
+          </div>
+
+          <!-- Card 2: One-Time / Credit Card -->
+          <div style="background:#fff;border-radius:var(--r-xl);overflow:hidden;box-shadow:0 2px 24px rgba(0,0,0,0.08);display:flex;flex-direction:column;">
+            <div id="wtg-img-trigger" style="position:relative;overflow:hidden;cursor:zoom-in;" title="Click to preview image">
+              <img src="one_time_contribution.webp" alt="Give by Credit or Debit Card" id="wtg-card-img" style="width:100%;height:240px;object-fit:cover;display:block;transition:transform 0.35s ease;"/>
+              <div style="position:absolute;top:14px;left:14px;background:#1A3A2A;color:#fff;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:4px 12px;border-radius:100px;">Credit / Debit</div>
+              <!-- Hover zoom hint -->
+              <div id="wtg-zoom-hint" style="position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;transition:background 0.25s ease;pointer-events:none;">
+                <div id="wtg-zoom-icon" style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.96);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 20px rgba(0,0,0,0.28);transform:scale(0);transition:transform 0.25s cubic-bezier(.34,1.56,.64,1),opacity 0.2s ease;opacity:0;">🔍</div>
+              </div>
+            </div>
+            <div style="padding:28px 28px 32px;flex:1;display:flex;flex-direction:column;">
+              <h3 style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:10px;">Give Electronically</h3>
+              <p style="font-size:14px;color:var(--text-muted);line-height:1.65;margin-bottom:auto;padding-bottom:24px;font-weight:300;">Make a secure one-time or monthly contribution using any major credit or debit card. Takes less than 2 minutes and you'll receive an instant email receipt.</p>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <a href="#" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#C87516;color:#fff;padding:14px 24px;border-radius:100px;font-size:15px;font-weight:700;text-decoration:none;text-align:center;">Donate Now →</a>
+                <a href="#" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:#C87516;border:2px solid #C87516;padding:12px 24px;border-radius:100px;font-size:14px;font-weight:600;text-decoration:none;text-align:center;">Set Up Monthly Giving</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Mail a Check -->
+          <div style="background:#fff;border-radius:var(--r-xl);overflow:hidden;box-shadow:0 2px 24px rgba(0,0,0,0.08);display:flex;flex-direction:column;">
+            <div style="height:240px;background:linear-gradient(135deg,#FEF3E2 0%,#FDDBA0 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;">
+              <div style="width:72px;height:72px;background:#C87516;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;">✉</div>
+              <div style="font-size:13px;font-weight:600;color:#9C5B0A;letter-spacing:0.5px;text-transform:uppercase;">Traditional Giving</div>
+            </div>
+            <div style="padding:28px 28px 32px;flex:1;display:flex;flex-direction:column;">
+              <h3 style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:10px;">Send Check or Money Order</h3>
+              <p style="font-size:14px;color:var(--text-muted);line-height:1.65;margin-bottom:20px;font-weight:300;">Make checks payable to <strong style="color:var(--text-body);font-weight:600;">"Johnny Davis Ministries"</strong> and mail to:</p>
+              <div style="background:#FEF3E2;border-left:3px solid #C87516;border-radius:0 var(--r-md) var(--r-md) 0;padding:18px 20px;margin-bottom:auto;">
+                <div style="font-size:15px;font-weight:700;color:var(--text-dark);margin-bottom:4px;">Johnny Davis Ministries</div>
+                <div style="font-size:14px;color:var(--text-body);line-height:1.7;font-weight:400;">P.O. Box 1904<br>Suwanee, GA 30024</div>
+              </div>
+              <p style="font-size:12px;color:var(--text-hint);margin-top:18px;line-height:1.6;">Include a note with the campaign or cause you'd like your gift directed to. All donations are tax-deductible.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Recurring Giving Banner -->
+        <div style="background:#000000;border-radius:var(--r-xl);padding:44px 56px;display:flex;align-items:center;justify-content:space-between;gap:32px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:10px;">Most impactful</div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:10px;">Become a Monthly Partner</h3>
+            <p style="font-size:15px;color:rgba(255,255,255,0.72);line-height:1.65;max-width:520px;font-weight:300;">Monthly givers make long-term programs possible. Your recurring gift helps us plan ahead, hire local staff, and serve more families — not just in a crisis, but every single day.</p>
+          </div>
+          <div style="flex-shrink:0;display:flex;flex-direction:column;gap:12px;align-items:flex-end;">
+            <a href="#" style="display:inline-flex;align-items:center;gap:8px;background:#C87516;color:#fff;padding:16px 32px;border-radius:100px;font-size:15px;font-weight:700;text-decoration:none;white-space:nowrap;">♡ Give Monthly</a>
+            <div style="font-size:12px;color:rgba(255,255,255,0.45);text-align:right;">Cancel anytime · Secure · Tax-deductible</div>
+          </div>
+        </div>
+
+        <!-- Trust row -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:48px;padding-top:40px;border-top:1px solid var(--border);margin-top:48px;">
+          <div style="display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13px;font-weight:500;">
+            <span style="font-size:20px;">🔒</span> 256-bit SSL Secure
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13px;font-weight:500;">
+            <span style="font-size:20px;">📋</span> Tax-Deductible Receipts
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13px;font-weight:500;">
+            <span style="font-size:20px;">✅</span> 100% Goes to the Mission
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:13px;font-weight:500;">
+            <span style="font-size:20px;">↩</span> Cancel Anytime
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- FRAME 3 — IMAGE MODAL (Give Electronically)                   -->
+<!-- ============================================================ -->
+<div id="wtg-modal" role="dialog" aria-modal="true" aria-label="Give Electronically — Campaign Image" style="
+  position:fixed;inset:0;z-index:99999;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0);
+  backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s ease, background 0.3s ease, backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
+">
+  <!-- Backdrop click to close -->
+  <div id="wtg-modal-backdrop" style="position:absolute;inset:0;cursor:pointer;" aria-hidden="true"></div>
+
+  <!-- Modal Card -->
+  <div id="wtg-modal-card" style="
+    position:relative;z-index:1;
+    background:#fff;border-radius:20px;
+    overflow:hidden;
+    width:min(680px,92vw);
+    box-shadow:0 32px 80px rgba(0,0,0,0.45);
+    transform:scale(0.88) translateY(24px);
+    transition:transform 0.35s cubic-bezier(.34,1.28,.64,1);
+  ">
+    <!-- Close button -->
+    <button id="wtg-modal-close" aria-label="Close" style="
+      position:absolute;top:14px;right:14px;z-index:10;
+      width:36px;height:36px;border-radius:50%;
+      background:rgba(0,0,0,0.55);color:#fff;border:none;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      font-size:18px;line-height:1;
+      transition:background 0.18s ease, transform 0.18s ease;
+    ">&#x2715;</button>
+
+    <!-- Image -->
+    <div style="position:relative;overflow:hidden;background:#f2ede6;">
+      <img src="one_time_contribution.webp" alt="Donate to JDGM — One-Time Contribution" style="width:100%;max-height:420px;object-fit:contain;display:block;"/>
+      <!-- Image overlay label -->
+      <div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.6));padding:32px 28px 20px;">
+        <div style="display:inline-block;background:#C87516;color:#fff;font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;padding:3px 11px;border-radius:100px;margin-bottom:8px;">Disaster Relief Fund</div>
+        <div style="font-size:17px;font-weight:700;color:#fff;line-height:1.3;">Pray for Earthquake Victims — Cebu, Philippines</div>
+      </div>
+    </div>
+
+    <!-- Modal body -->
+    <div style="padding:28px 32px 32px;">
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#1A1A1A;margin-bottom:10px;">Give Electronically (Credit / Debit)</h3>
+      <p style="font-size:14px;color:#6B6B68;line-height:1.7;margin-bottom:24px;font-weight:300;">Make a secure one-time or monthly contribution using any major credit or debit card. Your gift goes directly to active disaster relief, child feeding programs, and clean water wells on the ground.</p>
+
+      <!-- Quick-amount pills -->
+      <div style="margin-bottom:22px;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9E9B95;margin-bottom:10px;">Choose an amount</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;" id="wtg-modal-amounts">
+          <button data-amt="25"  style="padding:9px 20px;border-radius:100px;border:2px solid #E0DDD8;background:#fff;font-size:14px;font-weight:600;color:#3D3D3A;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s ease;">$25</button>
+          <button data-amt="50"  style="padding:9px 20px;border-radius:100px;border:2px solid #E0DDD8;background:#fff;font-size:14px;font-weight:600;color:#3D3D3A;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s ease;">$50</button>
+          <button data-amt="100" style="padding:9px 20px;border-radius:100px;border:2px solid #C87516;background:#FEF3E2;font-size:14px;font-weight:700;color:#C87516;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s ease;" class="wtg-amt-active">$100</button>
+          <button data-amt="250" style="padding:9px 20px;border-radius:100px;border:2px solid #E0DDD8;background:#fff;font-size:14px;font-weight:600;color:#3D3D3A;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s ease;">$250</button>
+          <button data-amt="500" style="padding:9px 20px;border-radius:100px;border:2px solid #E0DDD8;background:#fff;font-size:14px;font-weight:600;color:#3D3D3A;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s ease;">$500</button>
+          <button data-amt="other" style="padding:9px 20px;border-radius:100px;border:2px solid #E0DDD8;background:#fff;font-size:14px;font-weight:500;color:#9E9B95;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s ease;">Other</button>
+        </div>
+      </div>
+
+      <!-- Impact line -->
+      <div id="wtg-modal-impact" style="display:flex;align-items:center;gap:10px;background:#F0FAF4;border-radius:10px;padding:12px 16px;margin-bottom:22px;">
+        <span style="font-size:18px;">✅</span>
+        <span id="wtg-impact-text" style="font-size:13px;color:#1A6640;font-weight:500;">$100 feeds 14 children for a week in Cebu.</span>
+      </div>
+
+      <!-- CTA buttons -->
+      <div style="display:flex;gap:12px;align-items:center;">
+        <a href="#" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#C87516;color:#fff;padding:15px 24px;border-radius:100px;font-size:15px;font-weight:700;text-decoration:none;">♡ Donate Now</a>
+        <a href="#" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:transparent;color:#C87516;border:2px solid #C87516;padding:13px 24px;border-radius:100px;font-size:14px;font-weight:600;text-decoration:none;">Set Up Monthly Giving</a>
+      </div>
+
+      <div style="text-align:center;margin-top:14px;font-size:12px;color:#9E9B95;">🔒 Secure · Tax-deductible receipt emailed instantly · Cancel anytime</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var trigger  = document.getElementById('wtg-img-trigger');
+  var modal    = document.getElementById('wtg-modal');
+  var card     = document.getElementById('wtg-modal-card');
+  var closeBtn = document.getElementById('wtg-modal-close');
+  var backdrop = document.getElementById('wtg-modal-backdrop');
+  var cardImg  = document.getElementById('wtg-card-img');
+  var zoomHint = document.getElementById('wtg-zoom-hint');
+  var zoomIcon = document.getElementById('wtg-zoom-icon');
+  var amtBtns  = document.querySelectorAll('#wtg-modal-amounts button');
+  var impactEl = document.getElementById('wtg-impact-text');
+
+  var impacts = {
+    '25':    '$25 buys school supplies for 3 children for an entire semester.',
+    '50':    '$50 feeds a child for an entire month through our program.',
+    '100':   '$100 feeds 14 children for a week in Cebu.',
+    '250':   '$250 covers a month of disaster relief supplies for a family.',
+    '500':   '$500 contributes toward drilling a clean water well in Uganda.',
+    'other': 'Every dollar you give goes directly to life-changing mission work.'
+  };
+
+  /* ── Hover effect on card image ── */
+  trigger.addEventListener('mouseenter', function () {
+    zoomHint.style.background = 'rgba(0,0,0,0.28)';
+    zoomIcon.style.transform  = 'scale(1)';
+    zoomIcon.style.opacity    = '1';
+    cardImg.style.transform   = 'scale(1.04)';
+  });
+  trigger.addEventListener('mouseleave', function () {
+    zoomHint.style.background = 'rgba(0,0,0,0)';
+    zoomIcon.style.transform  = 'scale(0)';
+    zoomIcon.style.opacity    = '0';
+    cardImg.style.transform   = 'scale(1)';
+  });
+
+  /* ── Open modal ── */
+  function openModal() {
+    modal.style.pointerEvents  = 'all';
+    modal.style.opacity        = '1';
+    modal.style.background     = 'rgba(0,0,0,0.72)';
+    modal.style.backdropFilter = 'blur(6px)';
+    modal.style.webkitBackdropFilter = 'blur(6px)';
+    card.style.transform = 'scale(1) translateY(0)';
+    document.body.style.overflow = 'hidden';
+    setTimeout(function () { closeBtn.focus(); }, 350);
+  }
+
+  /* ── Close modal ── */
+  function closeModal() {
+    modal.style.opacity        = '0';
+    modal.style.background     = 'rgba(0,0,0,0)';
+    modal.style.backdropFilter = 'blur(0px)';
+    modal.style.webkitBackdropFilter = 'blur(0px)';
+    card.style.transform = 'scale(0.88) translateY(24px)';
+    modal.style.pointerEvents = 'none';
+    document.body.style.overflow = '';
+  }
+
+  trigger.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+
+  /* ── ESC to close ── */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modal.style.pointerEvents === 'all') closeModal();
+  });
+
+  /* ── Close button hover ── */
+  closeBtn.addEventListener('mouseenter', function () {
+    closeBtn.style.background = 'rgba(200,117,22,0.9)';
+    closeBtn.style.transform  = 'scale(1.1)';
+  });
+  closeBtn.addEventListener('mouseleave', function () {
+    closeBtn.style.background = 'rgba(0,0,0,0.55)';
+    closeBtn.style.transform  = 'scale(1)';
+  });
+
+  /* ── Amount pill selection ── */
+  amtBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      amtBtns.forEach(function (b) {
+        b.style.border     = '2px solid #E0DDD8';
+        b.style.background = '#fff';
+        b.style.color      = '#3D3D3A';
+        b.style.fontWeight = '600';
+        b.classList.remove('wtg-amt-active');
+      });
+      btn.style.border     = '2px solid #C87516';
+      btn.style.background = '#FEF3E2';
+      btn.style.color      = '#C87516';
+      btn.style.fontWeight = '700';
+      btn.classList.add('wtg-amt-active');
+      impactEl.textContent = impacts[btn.dataset.amt] || impacts['other'];
+    });
+  });
 })();
 </script>
 
@@ -1775,6 +2138,350 @@ body { font-family:'DM Sans',sans-serif; background:#E8E6E1; }
         </div>
       </div>
     </section>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- FRAME 5b: MARKETING STRATEGY                                  -->
+<!-- ============================================================ -->
+<div class="jdgm-real">
+  <div class="frame-label">Frame 05b — Marketing Strategy (1440px)</div>
+  <div class="frame">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="nav-logo">
+        <img src="https://d14tal8bchn59o.cloudfront.net/wXWLUTzDpSGIT3USnLCfVD5bygtfOXZJDbYPeTlo2vo/w:1920/plain/https://02f0a56ef46d93f03c90-22ac5f107621879d5667e0d7ed595bdb.ssl.cf2.rackcdn.com/sites/104216/photos/22629528/C3F69010-FC63-4CCA-9453-99A93EFB8AE2_original.png" alt="Johnny Davis Global Missions" style="height:52px;width:auto;display:block;"/>
+      </div>
+      <div class="nav-links">
+        <a class="nav-link">Home</a>
+        <a class="nav-link">Who We Are</a>
+        <a class="nav-link">What We Do</a>
+        <a class="nav-link">Make a Difference</a>
+        <a class="nav-link">Contact Us</a>
+        <a class="nav-cta">♡ Donate Now</a>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <div style="background:linear-gradient(135deg,#0D0D0D 0%,#1a1206 60%,#2b1a06 100%);padding:64px 64px 56px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-60px;right:-60px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(200,117,22,0.18) 0%,transparent 70%);pointer-events:none;"></div>
+      <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1;">
+        <div style="display:inline-block;background:#C87516;color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:18px;">Growth Blueprint</div>
+        <h1 style="font-family:'Playfair Display',serif;font-size:44px;font-weight:800;color:#fff;margin-bottom:14px;line-height:1.18;">Marketing &amp;<br>Growth Strategy</h1>
+        <p style="font-size:16px;color:rgba(255,255,255,0.6);max-width:560px;line-height:1.7;font-weight:300;">A multi-channel framework for growing donor reach, deepening engagement, and turning first-time givers into lifelong mission partners.</p>
+      </div>
+    </div>
+
+    <!-- KPI Bar -->
+    <div style="background:#fff;border-bottom:1px solid var(--border);padding:0 64px;">
+      <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);">
+        <div style="padding:28px 0 28px;border-right:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-hint);margin-bottom:6px;">Donor Growth Target</div>
+          <div style="font-size:32px;font-weight:800;color:var(--text-dark);line-height:1;">+340</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">new donors this year</div>
+        </div>
+        <div style="padding:28px 0 28px 32px;border-right:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-hint);margin-bottom:6px;">Email List Goal</div>
+          <div style="font-size:32px;font-weight:800;color:var(--text-dark);line-height:1;">5,000</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">subscribers by Q4</div>
+        </div>
+        <div style="padding:28px 0 28px 32px;border-right:1px solid var(--border);">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-hint);margin-bottom:6px;">Recurring Donor Rate</div>
+          <div style="font-size:32px;font-weight:800;color:#C87516;line-height:1;">35%</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">of all donors monthly</div>
+        </div>
+        <div style="padding:28px 0 28px 32px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-hint);margin-bottom:6px;">Avg Gift Target</div>
+          <div style="font-size:32px;font-weight:800;color:var(--text-dark);line-height:1;">$68</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">per transaction</div>
+        </div>
+      </div>
+    </div>
+
+    <section style="padding:72px 64px;background:var(--bg-page);">
+      <div style="max-width:1100px;margin:0 auto;">
+
+        <!-- Section: Donor Acquisition Funnel -->
+        <div style="margin-bottom:64px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;">
+            <div>
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C87516;margin-bottom:8px;">Step-by-Step</div>
+              <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text-dark);">Donor Acquisition Funnel</h2>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;">
+            <!-- connector line -->
+            <div style="position:absolute;top:36px;left:10%;right:10%;height:2px;background:linear-gradient(to right,#C87516,#E9A73E,#C87516);z-index:0;"></div>
+            <!-- Stage 1 -->
+            <div style="text-align:center;position:relative;z-index:1;">
+              <div style="width:72px;height:72px;border-radius:50%;background:#C87516;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:26px;box-shadow:0 4px 16px rgba(200,117,22,0.35);">📣</div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Awareness</div>
+              <div style="font-size:11px;color:var(--text-muted);line-height:1.5;">Social media, Google Grants, church referrals</div>
+            </div>
+            <!-- Stage 2 -->
+            <div style="text-align:center;position:relative;z-index:1;">
+              <div style="width:72px;height:72px;border-radius:50%;background:#D48B30;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:26px;box-shadow:0 4px 16px rgba(200,117,22,0.25);">👁</div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Engagement</div>
+              <div style="font-size:11px;color:var(--text-muted);line-height:1.5;">Blog, email welcome sequence, field updates</div>
+            </div>
+            <!-- Stage 3 -->
+            <div style="text-align:center;position:relative;z-index:1;">
+              <div style="width:72px;height:72px;border-radius:50%;background:#1A3A2A;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:26px;box-shadow:0 4px 16px rgba(26,58,42,0.3);">💳</div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:6px;">First Gift</div>
+              <div style="font-size:11px;color:var(--text-muted);line-height:1.5;">Landing page, campaign urgency, impact copy</div>
+            </div>
+            <!-- Stage 4 -->
+            <div style="text-align:center;position:relative;z-index:1;">
+              <div style="width:72px;height:72px;border-radius:50%;background:#2D6A4F;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:26px;box-shadow:0 4px 16px rgba(45,106,79,0.3);">🔁</div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Recurring</div>
+              <div style="font-size:11px;color:var(--text-muted);line-height:1.5;">Upgrade ask, monthly partner perks, receipts</div>
+            </div>
+            <!-- Stage 5 -->
+            <div style="text-align:center;position:relative;z-index:1;">
+              <div style="width:72px;height:72px;border-radius:50%;background:#000;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:26px;box-shadow:0 4px 16px rgba(0,0,0,0.2);">🤝</div>
+              <div style="font-size:13px;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Ambassador</div>
+              <div style="font-size:11px;color:var(--text-muted);line-height:1.5;">Referral sharing, church partnerships, events</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Marketing Channels -->
+        <div style="margin-bottom:64px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C87516;margin-bottom:8px;">Channel Mix</div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text-dark);margin-bottom:28px;">Key Marketing Channels</h2>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+
+            <!-- Social Media -->
+            <div style="background:#fff;border-radius:var(--r-xl);padding:28px;border:1px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div style="width:44px;height:44px;border-radius:var(--r-md);background:#FEF3E2;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">📱</div>
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--text-dark);">Social Media</div>
+                  <div style="font-size:12px;color:var(--text-muted);">Facebook · Instagram · YouTube</div>
+                </div>
+                <div style="margin-left:auto;background:#FEF3E2;color:#C87516;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;">High</div>
+              </div>
+              <div style="font-size:13px;color:var(--text-body);line-height:1.65;margin-bottom:16px;">Short-form field updates, before/after stories, and live Q&amp;As from the Philippines. Drives top-of-funnel traffic and emotional connection.</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Audience Reach</span><span style="font-weight:600;color:var(--text-dark);">82%</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:82%;height:100%;background:#C87516;border-radius:100px;"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Donor Conversion</span><span style="font-weight:600;color:var(--text-dark);">34%</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:34%;height:100%;background:#C87516;border-radius:100px;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Marketing -->
+            <div style="background:#fff;border-radius:var(--r-xl);padding:28px;border:1px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div style="width:44px;height:44px;border-radius:var(--r-md);background:#D8F3DC;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">✉️</div>
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--text-dark);">Email Marketing</div>
+                  <div style="font-size:12px;color:var(--text-muted);">Welcome · Monthly · Appeals</div>
+                </div>
+                <div style="margin-left:auto;background:#D8F3DC;color:#1A6640;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;">Top ROI</div>
+              </div>
+              <div style="font-size:13px;color:var(--text-body);line-height:1.65;margin-bottom:16px;">Automated 5-step welcome sequence + monthly field update newsletters. Highest conversion-to-donation channel across all nonprofits.</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Open Rate Goal</span><span style="font-weight:600;color:var(--text-dark);">42%</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:42%;height:100%;background:#2D6A4F;border-radius:100px;"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Donor Conversion</span><span style="font-weight:600;color:var(--text-dark);">61%</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:61%;height:100%;background:#2D6A4F;border-radius:100px;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Google Ad Grants -->
+            <div style="background:#fff;border-radius:var(--r-xl);padding:28px;border:1px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div style="width:44px;height:44px;border-radius:var(--r-md);background:#EFF6FF;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🔍</div>
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--text-dark);">Google Ad Grants</div>
+                  <div style="font-size:12px;color:var(--text-muted);">$10K/mo free ads for nonprofits</div>
+                </div>
+                <div style="margin-left:auto;background:#EFF6FF;color:#1D4ED8;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;">Free</div>
+              </div>
+              <div style="font-size:13px;color:var(--text-body);line-height:1.65;margin-bottom:16px;">Apply for Google's $10,000/month ad grant for nonprofits. Target high-intent search terms like "donate to Philippines missions" to capture new donors.</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Monthly Ad Budget</span><span style="font-weight:600;color:var(--text-dark);">$10,000</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:100%;height:100%;background:#3B82F6;border-radius:100px;"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Estimated Reach</span><span style="font-weight:600;color:var(--text-dark);">+2,400/mo</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:75%;height:100%;background:#3B82F6;border-radius:100px;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Church Network -->
+            <div style="background:#fff;border-radius:var(--r-xl);padding:28px;border:1px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div style="width:44px;height:44px;border-radius:var(--r-md);background:#F8E8F2;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">⛪</div>
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--text-dark);">Church Network</div>
+                  <div style="font-size:12px;color:var(--text-muted);">Partnerships · Missions Sundays</div>
+                </div>
+                <div style="margin-left:auto;background:#F8E8F2;color:#C065A0;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;">Trusted</div>
+              </div>
+              <div style="font-size:13px;color:var(--text-body);line-height:1.65;margin-bottom:16px;">Speaking engagements at partner churches and "Missions Sunday" presentations convert highly engaged audiences into recurring givers and volunteers.</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Avg Gift from Church</span><span style="font-weight:600;color:var(--text-dark);">$120</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:88%;height:100%;background:#C065A0;border-radius:100px;"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Recurring Rate</span><span style="font-weight:600;color:var(--text-dark);">55%</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:55%;height:100%;background:#C065A0;border-radius:100px;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content / Blog -->
+            <div style="background:#fff;border-radius:var(--r-xl);padding:28px;border:1px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div style="width:44px;height:44px;border-radius:var(--r-md);background:#FFFBEB;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">✍️</div>
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--text-dark);">Content &amp; Blog</div>
+                  <div style="font-size:12px;color:var(--text-muted);">Field Reports · Impact Stories</div>
+                </div>
+                <div style="margin-left:auto;background:#FFFBEB;color:#B45309;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;">SEO</div>
+              </div>
+              <div style="font-size:13px;color:var(--text-body);line-height:1.65;margin-bottom:16px;">Monthly field reports and donor impact stories build organic search traffic and deepen existing donor relationships. Repurposed across email and social.</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Posts per Month</span><span style="font-weight:600;color:var(--text-dark);">4–6</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:65%;height:100%;background:#D97706;border-radius:100px;"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Organic Traffic Goal</span><span style="font-weight:600;color:var(--text-dark);">+1,800/mo</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:50%;height:100%;background:#D97706;border-radius:100px;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Peer-to-Peer / Referral -->
+            <div style="background:#fff;border-radius:var(--r-xl);padding:28px;border:1px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <div style="width:44px;height:44px;border-radius:var(--r-md);background:#F0FAF4;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🗣</div>
+                <div>
+                  <div style="font-size:15px;font-weight:700;color:var(--text-dark);">Peer-to-Peer</div>
+                  <div style="font-size:12px;color:var(--text-muted);">Referrals · Birthday Fundraisers</div>
+                </div>
+                <div style="margin-left:auto;background:#F0FAF4;color:#1A6640;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;">Viral</div>
+              </div>
+              <div style="font-size:13px;color:var(--text-body);line-height:1.65;margin-bottom:16px;">Enable donors to create personal fundraiser pages or birthday campaigns. Word-of-mouth from trusted friends converts at 3× the rate of cold channels.</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Share Rate</span><span style="font-weight:600;color:var(--text-dark);">28%</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:28%;height:100%;background:#40916C;border-radius:100px;"></div></div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>Referred Conversion</span><span style="font-weight:600;color:var(--text-dark);">47%</span></div>
+                  <div style="height:5px;background:#F0EDE8;border-radius:100px;"><div style="width:47%;height:100%;background:#40916C;border-radius:100px;"></div></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Section: Annual Goals Progress -->
+        <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:28px;margin-bottom:64px;">
+
+          <!-- Goals Progress -->
+          <div style="background:#fff;border-radius:var(--r-xl);padding:36px;border:1px solid var(--border);">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C87516;margin-bottom:8px;">2025 Targets</div>
+            <h3 style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:28px;">Annual Growth Goals</h3>
+            <div style="display:flex;flex-direction:column;gap:22px;">
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+                  <div style="font-size:14px;font-weight:600;color:var(--text-dark);">Total Donors</div>
+                  <div style="font-size:13px;color:var(--text-muted);">247 <span style="color:var(--text-hint);">/ 500 goal</span></div>
+                </div>
+                <div style="height:8px;background:#F0EDE8;border-radius:100px;"><div style="width:49%;height:100%;background:#C87516;border-radius:100px;"></div></div>
+                <div style="font-size:11px;color:var(--text-hint);margin-top:5px;">49% — on track for Q3 milestone</div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+                  <div style="font-size:14px;font-weight:600;color:var(--text-dark);">Monthly Partners</div>
+                  <div style="font-size:13px;color:var(--text-muted);">68 <span style="color:var(--text-hint);">/ 175 goal</span></div>
+                </div>
+                <div style="height:8px;background:#F0EDE8;border-radius:100px;"><div style="width:39%;height:100%;background:#2D6A4F;border-radius:100px;"></div></div>
+                <div style="font-size:11px;color:var(--text-hint);margin-top:5px;">39% — needs summer push</div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+                  <div style="font-size:14px;font-weight:600;color:var(--text-dark);">Email Subscribers</div>
+                  <div style="font-size:13px;color:var(--text-muted);">1,840 <span style="color:var(--text-hint);">/ 5,000 goal</span></div>
+                </div>
+                <div style="height:8px;background:#F0EDE8;border-radius:100px;"><div style="width:37%;height:100%;background:#C87516;border-radius:100px;"></div></div>
+                <div style="font-size:11px;color:var(--text-hint);margin-top:5px;">37% — focus on post-campaign opt-ins</div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;">
+                  <div style="font-size:14px;font-weight:600;color:var(--text-dark);">Church Partnerships</div>
+                  <div style="font-size:13px;color:var(--text-muted);">6 <span style="color:var(--text-hint);">/ 20 goal</span></div>
+                </div>
+                <div style="height:8px;background:#F0EDE8;border-radius:100px;"><div style="width:30%;height:100%;background:#C065A0;border-radius:100px;"></div></div>
+                <div style="font-size:11px;color:var(--text-hint);margin-top:5px;">30% — pipeline of 4 churches in Q3</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Content Calendar -->
+          <div style="background:#fff;border-radius:var(--r-xl);padding:36px;border:1px solid var(--border);">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C87516;margin-bottom:8px;">Q3 Plan</div>
+            <h3 style="font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:24px;">Campaign Calendar</h3>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:#FEF3E2;border-radius:var(--r-md);">
+                <div style="width:42px;text-align:center;flex-shrink:0;"><div style="font-size:10px;font-weight:700;color:#C87516;text-transform:uppercase;">Jul</div><div style="font-size:22px;font-weight:800;color:#C87516;line-height:1;">4</div></div>
+                <div><div style="font-size:13px;font-weight:600;color:var(--text-dark);">Mid-Year Impact Report Email</div><div style="font-size:12px;color:var(--text-muted);margin-top:3px;">Donor update + soft ask for summer giving</div></div>
+                <div style="margin-left:auto;flex-shrink:0;background:#C87516;color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:100px;">Email</div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:#F0FAF4;border-radius:var(--r-md);">
+                <div style="width:42px;text-align:center;flex-shrink:0;"><div style="font-size:10px;font-weight:700;color:#2D6A4F;text-transform:uppercase;">Jul</div><div style="font-size:22px;font-weight:800;color:#2D6A4F;line-height:1;">18</div></div>
+                <div><div style="font-size:13px;font-weight:600;color:var(--text-dark);">Back to School — Feed 100 Kids</div><div style="font-size:12px;color:var(--text-muted);margin-top:3px;">Urgency campaign · Social + Email push</div></div>
+                <div style="margin-left:auto;flex-shrink:0;background:#2D6A4F;color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:100px;">Campaign</div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:#EFF6FF;border-radius:var(--r-md);">
+                <div style="width:42px;text-align:center;flex-shrink:0;"><div style="font-size:10px;font-weight:700;color:#1D4ED8;text-transform:uppercase;">Aug</div><div style="font-size:22px;font-weight:800;color:#1D4ED8;line-height:1;">10</div></div>
+                <div><div style="font-size:13px;font-weight:600;color:var(--text-dark);">Google Grants Launch</div><div style="font-size:12px;color:var(--text-muted);margin-top:3px;">Apply + go live on search ads</div></div>
+                <div style="margin-left:auto;flex-shrink:0;background:#1D4ED8;color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:100px;">Ads</div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:14px;padding:14px;background:#F8E8F2;border-radius:var(--r-md);">
+                <div style="width:42px;text-align:center;flex-shrink:0;"><div style="font-size:10px;font-weight:700;color:#C065A0;text-transform:uppercase;">Sep</div><div style="font-size:22px;font-weight:800;color:#C065A0;line-height:1;">7</div></div>
+                <div><div style="font-size:13px;font-weight:600;color:var(--text-dark);">Missions Sunday Speaking Tour</div><div style="font-size:12px;color:var(--text-muted);margin-top:3px;">3 Atlanta-area church partnerships</div></div>
+                <div style="margin-left:auto;flex-shrink:0;background:#C065A0;color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:100px;">Church</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom CTA Banner -->
+        <div style="background:#000;border-radius:var(--r-xl);padding:48px 56px;display:flex;align-items:center;justify-content:space-between;gap:32px;">
+          <div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:10px;">Ready to grow?</div>
+            <h3 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:10px;">Let's Build the Full<br>Marketing Engine</h3>
+            <p style="font-size:15px;color:rgba(255,255,255,0.6);line-height:1.65;max-width:480px;font-weight:300;">This strategy covers all six channels — from Google Grants to church partnerships. Ready to implement it together and watch your mission reach more lives?</p>
+          </div>
+          <div style="flex-shrink:0;display:flex;flex-direction:column;gap:12px;align-items:flex-end;">
+            <a href="#" style="display:inline-flex;align-items:center;gap:8px;background:#C87516;color:#fff;padding:16px 32px;border-radius:100px;font-size:15px;font-weight:700;text-decoration:none;white-space:nowrap;">Let's Get Started →</a>
+            <a href="#" style="display:inline-flex;align-items:center;gap:8px;background:transparent;color:rgba(255,255,255,0.5);padding:12px 24px;border-radius:100px;font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap;border:1px solid rgba(255,255,255,0.15);">View Full Proposal</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </div>
 </div>
 
@@ -3827,6 +4534,129 @@ JDGM Founder &amp; Executive Director</textarea>
   </div>
 </div>
 
+<!-- DONATION DETAILS MODAL -->
+<div id="donation-details-modal" class="admin-modal">
+  <div class="admin-modal-backdrop"></div>
+  <div class="admin-modal-container">
+    <div class="admin-modal-header">
+      <div class="admin-modal-title">Donation Details</div>
+      <button id="donation-details-modal-close" class="admin-modal-close-btn">✕</button>
+    </div>
+    <div class="admin-modal-body">
+      <div class="payment-detail-grid">
+        <div class="payment-detail-item">
+          <div class="payment-detail-label">Donor</div>
+          <div class="payment-detail-value" id="donation-donor">Angela Wilson</div>
+        </div>
+        <div class="payment-detail-item">
+          <div class="payment-detail-label">Amount</div>
+          <div class="payment-detail-value" id="donation-amount">$7.99</div>
+        </div>
+        <div class="payment-detail-item">
+          <div class="payment-detail-label">Campaign</div>
+          <div class="payment-detail-value" id="donation-campaign">🍽️ Feed Filipino Children</div>
+        </div>
+        <div class="payment-detail-item">
+          <div class="payment-detail-label">Type</div>
+          <div class="payment-detail-value" id="donation-type">Monthly</div>
+        </div>
+        <div class="payment-detail-item">
+          <div class="payment-detail-label">Stripe ID</div>
+          <div class="payment-detail-value" id="donation-stripe-id">sub_3kHm9x...</div>
+        </div>
+        <div class="payment-detail-item">
+          <div class="payment-detail-label">Date</div>
+          <div class="payment-detail-value" id="donation-date">Mar 29, 2025</div>
+        </div>
+        <div class="payment-detail-item">
+          <div class="payment-detail-label">Status</div>
+          <div class="payment-detail-value" id="donation-status">Completed</div>
+        </div>
+        <div class="payment-detail-item">
+          <div class="payment-detail-label">Receipt Status</div>
+          <div class="payment-detail-value" id="donation-receipt-status">✓ Sent</div>
+        </div>
+      </div>
+      <div class="payment-notes">
+        <div class="payment-notes-title">Donation Information</div>
+        <div class="payment-notes-text" id="donation-notes">This recurring donation supports our Feed Filipino Children campaign. The donor has been giving monthly since January 2025.</div>
+      </div>
+    </div>
+    <div class="admin-modal-footer">
+      <button id="donation-details-modal-close-bottom" class="tbl-btn">Close</button>
+      <button id="donation-details-send-receipt" class="tbl-btn">Send Receipt</button>
+      <button id="donation-details-contact-donor" class="tbl-btn tbl-btn-primary">Contact Donor</button>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIPT VIEW MODAL -->
+<div id="receipt-modal" class="admin-modal">
+  <div class="admin-modal-backdrop"></div>
+  <div class="admin-modal-container" style="max-width: 600px;">
+    <div class="admin-modal-header">
+      <div class="admin-modal-title">Donation Receipt</div>
+      <button id="receipt-modal-close" class="admin-modal-close-btn">✕</button>
+    </div>
+    <div class="admin-modal-body">
+      <div style="border: 1px solid var(--border); border-radius: var(--r-lg); padding: 24px; background: #fff;">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div style="font-size: 24px; font-weight: 700; color: var(--brand-deep); margin-bottom: 8px;">✦ JDGM</div>
+          <div style="font-size: 14px; color: var(--text-muted);">Johnny Davis Global Missions</div>
+          <div style="font-size: 12px; color: var(--text-hint);">Tax ID: 45-6789012</div>
+        </div>
+
+        <div style="border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 16px;">
+          <h3 style="font-size: 18px; font-weight: 600; margin: 0 0 8px 0;">Donation Receipt</h3>
+          <div style="font-size: 12px; color: var(--text-muted);">Receipt #<span id="receipt-number">RC-2025-00123</span></div>
+          <div style="font-size: 12px; color: var(--text-muted);">Date: <span id="receipt-date">March 29, 2025</span></div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div style="font-weight: 600; margin-bottom: 4px;">Donor Information</div>
+          <div id="receipt-donor-name" style="font-size: 14px;">Angela Wilson</div>
+          <div id="receipt-donor-email" style="font-size: 12px; color: var(--text-muted);">angela.wilson@email.com</div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div style="font-weight: 600; margin-bottom: 4px;">Donation Details</div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border);">
+            <span id="receipt-campaign">🍽️ Feed Filipino Children</span>
+            <span id="receipt-amount" style="font-weight: 600;">$7.99</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 8px 0; font-weight: 600;">
+            <span>Total</span>
+            <span id="receipt-total">$7.99</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div style="font-weight: 600; margin-bottom: 4px;">Payment Information</div>
+          <div style="font-size: 12px; color: var(--text-muted);">Payment Method: <span id="receipt-payment-method">Credit Card</span></div>
+          <div style="font-size: 12px; color: var(--text-muted);">Transaction ID: <span id="receipt-transaction-id">sub_3kHm9x...</span></div>
+          <div style="font-size: 12px; color: var(--text-muted);">Type: <span id="receipt-type">Monthly Recurring</span></div>
+        </div>
+
+        <div style="background: var(--bg-page); padding: 12px; border-radius: var(--r-md); margin-bottom: 16px;">
+          <div style="font-size: 12px; color: var(--text-muted); line-height: 1.4;">
+            <strong>Tax Deduction:</strong> This donation is tax-deductible to the extent allowed by law.
+            No goods or services were provided in exchange for this donation.
+          </div>
+        </div>
+
+        <div style="text-align: center; font-size: 12px; color: var(--text-muted);">
+          Thank you for your generous support of JDGM's mission to spread hope and change lives worldwide.
+        </div>
+      </div>
+    </div>
+    <div class="admin-modal-footer">
+      <button id="receipt-modal-close-bottom" class="tbl-btn">Close</button>
+      <button id="receipt-modal-download" class="tbl-btn">Download PDF</button>
+      <button id="receipt-modal-email" class="tbl-btn tbl-btn-primary">Email Receipt</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function() {
   'use strict';
@@ -4224,6 +5054,148 @@ JDGM Founder &amp; Executive Director</textarea>
       }
     }
   });
+
+  // Handle donation table action buttons
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('tbl-btn') && e.target.closest('.admin-table')) {
+      const buttonText = e.target.textContent.trim();
+      const row = e.target.closest('tr');
+      const donorName = row.cells[1].querySelector('div:first-child').textContent.trim();
+      const donorEmail = row.cells[1].querySelector('div:last-child').textContent.trim();
+      const amount = row.cells[3].textContent.trim();
+      const campaign = row.cells[2].textContent.trim().replace(/^[^\s]+\s/, ''); // Remove emoji
+      const type = row.cells[4].textContent.trim();
+      const stripeId = row.cells[5].textContent.trim();
+      const date = row.cells[6].textContent.trim();
+      const status = row.cells[7].textContent.trim();
+
+      if (buttonText === 'View') {
+        // Populate donation details modal
+        document.getElementById('donation-donor').textContent = donorName;
+        document.getElementById('donation-amount').textContent = amount;
+        document.getElementById('donation-campaign').textContent = campaign;
+        document.getElementById('donation-type').textContent = type;
+        document.getElementById('donation-stripe-id').textContent = stripeId;
+        document.getElementById('donation-date').textContent = date;
+        document.getElementById('donation-status').textContent = status;
+        document.getElementById('donation-receipt-status').textContent = row.cells[8].textContent.trim();
+
+        // Show donation details modal
+        document.getElementById('donation-details-modal').classList.add('show');
+        document.body.style.overflow = 'hidden';
+      } else if (buttonText === 'Receipt') {
+        // Populate receipt modal
+        document.getElementById('receipt-donor-name').textContent = donorName;
+        document.getElementById('receipt-donor-email').textContent = donorEmail;
+        document.getElementById('receipt-amount').textContent = amount;
+        document.getElementById('receipt-total').textContent = amount;
+        document.getElementById('receipt-campaign').textContent = campaign;
+        document.getElementById('receipt-transaction-id').textContent = stripeId;
+        document.getElementById('receipt-date').textContent = date;
+        document.getElementById('receipt-type').textContent = type === 'Monthly' ? 'Monthly Recurring' : 'One-time Donation';
+        document.getElementById('receipt-number').textContent = 'RC-2025-' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+
+        // Show receipt modal
+        document.getElementById('receipt-modal').classList.add('show');
+        document.body.style.overflow = 'hidden';
+      } else if (buttonText === 'Retry') {
+        showToast('🔄', `Retrying payment for ${donorName}'s $${amount} donation...`);
+        // In a real app, this would trigger a payment retry via Stripe
+        // Update the status to show it's being retried
+        const statusCell = row.cells[7];
+        statusCell.innerHTML = '<span class="status status-pending">Retrying</span>';
+      } else if (buttonText === 'Email') {
+        showToast('📧', `Opening email composer for ${donorName}...`);
+        // In a real app, this would open an email interface
+      }
+    }
+  });
+
+  // Handle donation details modal
+  const donationDetailsModal = document.getElementById('donation-details-modal');
+  const donationDetailsCloseBtn = document.getElementById('donation-details-modal-close');
+  const donationDetailsCloseBottomBtn = document.getElementById('donation-details-modal-close-bottom');
+  const donationDetailsSendReceiptBtn = document.getElementById('donation-details-send-receipt');
+  const donationDetailsContactDonorBtn = document.getElementById('donation-details-contact-donor');
+
+  function hideDonationDetailsModal() {
+    donationDetailsModal.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  if (donationDetailsCloseBtn) {
+    donationDetailsCloseBtn.addEventListener('click', hideDonationDetailsModal);
+  }
+
+  if (donationDetailsCloseBottomBtn) {
+    donationDetailsCloseBottomBtn.addEventListener('click', hideDonationDetailsModal);
+  }
+
+  if (donationDetailsSendReceiptBtn) {
+    donationDetailsSendReceiptBtn.addEventListener('click', function() {
+      hideDonationDetailsModal();
+      showToast('📄', 'Receipt sent to donor...');
+    });
+  }
+
+  if (donationDetailsContactDonorBtn) {
+    donationDetailsContactDonorBtn.addEventListener('click', function() {
+      hideDonationDetailsModal();
+      showToast('📧', 'Opening donor contact form...');
+    });
+  }
+
+  // Close donation details modal when clicking backdrop
+  if (donationDetailsModal) {
+    donationDetailsModal.addEventListener('click', function(e) {
+      if (e.target === donationDetailsModal || e.target.classList.contains('admin-modal-backdrop')) {
+        hideDonationDetailsModal();
+      }
+    });
+  }
+
+  // Handle receipt modal
+  const receiptModal = document.getElementById('receipt-modal');
+  const receiptCloseBtn = document.getElementById('receipt-modal-close');
+  const receiptCloseBottomBtn = document.getElementById('receipt-modal-close-bottom');
+  const receiptDownloadBtn = document.getElementById('receipt-modal-download');
+  const receiptEmailBtn = document.getElementById('receipt-modal-email');
+
+  function hideReceiptModal() {
+    receiptModal.classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  if (receiptCloseBtn) {
+    receiptCloseBtn.addEventListener('click', hideReceiptModal);
+  }
+
+  if (receiptCloseBottomBtn) {
+    receiptCloseBottomBtn.addEventListener('click', hideReceiptModal);
+  }
+
+  if (receiptDownloadBtn) {
+    receiptDownloadBtn.addEventListener('click', function() {
+      hideReceiptModal();
+      showToast('📄', 'Downloading receipt PDF...');
+    });
+  }
+
+  if (receiptEmailBtn) {
+    receiptEmailBtn.addEventListener('click', function() {
+      hideReceiptModal();
+      showToast('📧', 'Emailing receipt to donor...');
+    });
+  }
+
+  // Close receipt modal when clicking backdrop
+  if (receiptModal) {
+    receiptModal.addEventListener('click', function(e) {
+      if (e.target === receiptModal || e.target.classList.contains('admin-modal-backdrop')) {
+        hideReceiptModal();
+      }
+    });
+  }
 
   document.readyState === 'loading'
     ? document.addEventListener('DOMContentLoaded', init)
