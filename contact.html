@@ -151,14 +151,14 @@
     }
     .nav-links a:hover, .nav-links a.active { color:var(--white); background:rgba(255,255,255,.08); }
     .nav-links a.active { color:var(--orange-light); }
-    .nav-donate {
+    .btn-nav-donate {
       background:var(--orange); color:var(--white);
       font-weight:700; padding:9px 20px; border-radius:50px;
       margin-left:8px; font-size:.88rem;
       box-shadow:0 2px 12px rgba(240,124,30,.4);
       transition:var(--transition);
     }
-    .nav-donate:hover {
+    .btn-nav-donate:hover {
       background:var(--orange-dark); transform:translateY(-1px);
       box-shadow:0 4px 18px rgba(240,124,30,.55);
     }
@@ -187,7 +187,7 @@
     }
     .nav-mobile a:last-child { border-bottom:none; }
     .nav-mobile a:hover { color:var(--orange); }
-    .nav-mobile .nav-donate {
+    .nav-mobile .btn-nav-donate {
       margin-top:16px; text-align:center; padding:14px 24px;
       border-radius:50px; border-bottom:none;
     }
@@ -669,15 +669,15 @@
       <a href="index.html" class="nav-logo" aria-label="Johnny Davis Global Missions Home">
         <img src="images/logo.webp" alt="Johnny Davis Global Missions" />
       </a>
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="index.html#mission">Mission</a>
-        <a href="index.html#help">How You Can Help</a>
-        <a href="news.html">Blog &amp; News</a>
-        <a href="index.html#testimonials">Testimonials</a>
-        <a href="donationpage.html" class="nav-donate">&#9829; Donate</a>
-        <a href="contact.html" class="active">Contact</a>
-      </div>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#mission">Mission</a></li>
+        <li><a href="index.html#help">How You Can Help</a></li>
+        <li><a href="news.html">Blog &amp; News</a></li>
+        <li><a href="index.html#testimonials">Testimonials</a></li>
+        <li><a href="donationpage.html" class="btn-nav-donate" aria-label="Donate to Johnny Davis Global Missions">&#9829; Donate</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+      </ul>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -690,7 +690,7 @@
     <a href="news.html">Blog &amp; News</a>
     <a href="index.html#testimonials">Testimonials</a>
     <a href="contact.html" class="active">Contact</a>
-    <a href="donationpage.html" class="nav-donate">&#9829; Donate Now</a>
+    <a href="donationpage.html" class="btn-nav-donate">&#9829; Donate Now</a>
   </nav>
 </header>
 
